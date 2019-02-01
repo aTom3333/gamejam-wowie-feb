@@ -3,3 +3,11 @@
 cmake-build-debug
 bin
 
+# Visual Studio
+*.vcxproj
+*.sln
+.vs
+*.filters
+*.user
+
+/gamejam-fevrier-2019
