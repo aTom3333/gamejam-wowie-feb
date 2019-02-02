@@ -1,6 +1,7 @@
 #ifndef UI_H
 #define UI_H
 
+#include <vector>
 #include <SFML/Graphics.hpp>
 
 class UI {
@@ -10,9 +11,11 @@ class UI {
 		sf::Sprite spriteButton_;
 		sf::Sprite spriteMenu_;
 		sf::Sprite spriteQuit_;
+		std::vector<sf::Sprite> spritesItem_;
 		sf::Text textDate_;
 		sf::Text textTime_;
 		bool displayed_ = false;
+		int unlockedLevel_ = 4;
 	public:
 		UI(UI const&) = delete;
 		UI(UI&&) = delete;
