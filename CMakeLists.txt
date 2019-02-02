@@ -19,3 +19,5 @@ if(SFML_FOUND)
     include_directories(${SFML_INCLUDE_DIR})
     target_link_libraries(jeu ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 endif()
+
+target_link_libraries(jeu stdc++fs)

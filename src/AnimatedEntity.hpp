@@ -2,13 +2,17 @@
 #define ANIMATEDENTITY_HPP
 
 #include "animatedSprite.hpp"
-#include <type_traits>
+#include "Entity.hpp"
+
 #include <SFML/Graphics/RenderTarget.hpp>
+
+#include <type_traits>
 #include <vector>
+#include <stdexcept>
 
 
 template<typename StateType>
-    class AnimatedEntity : public sf::Transformable
+class AnimatedEntity : public Entity
 {
     static_assert(std::is_enum_v<StateType>, "AnimatedEntity is expecting an enum type to describe its possible states");
     
@@ -16,13 +20,16 @@ template<typename StateType>
         AnimatedEntity(StateType defaultState, AnimatedSprite const& sprite);
         void setup(StateType state, AnimatedSprite const& sprite);
         void setState(StateType state);
+        StateType getState() const;
 		sf::Vector2f getSize();
 		void setColor(sf::Color c);
-        void draw(sf::RenderTarget&);
+        void draw(sf::RenderTarget&) override;
         void updateTransformation();
+        sf::FloatRect boundingBox() const override;
     
     private:
         AnimatedSprite* currentSprite();
+        AnimatedSprite const* currentSprite() const;
     
         StateType current;
         std::vector<StateType> states;
@@ -91,13 +98,23 @@ template<typename StateType>
 AnimatedSprite* AnimatedEntity<StateType>::currentSprite()
 {
     ptrdiff_t index = std::find(states.begin(), states.end(), current) - states.begin();
+    if(index == states.size())
+        throw std::logic_error("Animation " + std::to_string(current) + " has not been set up.");
+    return index < states.size() ? &sprites[index] : nullptr;
+}
+
+template<typename StateType>
+AnimatedSprite const* AnimatedEntity<StateType>::currentSprite() const
+{
+    ptrdiff_t index = std::find(states.begin(), states.end(), current) - states.begin();
+    if(index == states.size())
+        throw std::logic_error("Animation " + std::to_string(current) + " has not been set up.");
     return index < states.size() ? &sprites[index] : nullptr;
 }
 
 template<typename StateType>
 void AnimatedEntity<StateType>::updateTransformation()
 {
-    auto p = getPosition();
     auto c = currentSprite();
     if(!c)
         return;
@@ -106,6 +123,18 @@ void AnimatedEntity<StateType>::updateTransformation()
     curSprite.setPosition(getPosition());
     curSprite.setRotation(getRotation());
     curSprite.setScale(getScale());
+}
+
+template<typename StateType>
+sf::FloatRect AnimatedEntity<StateType>::boundingBox() const
+{
+    return currentSprite()->getGlobalBounds();
+}
+
+template<typename StateType>
+StateType AnimatedEntity<StateType>::getState() const
+{
+    return current;
 }
 
 #endif // ANIMATEDENTITY_HPP

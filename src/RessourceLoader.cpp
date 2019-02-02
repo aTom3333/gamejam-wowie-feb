@@ -4,26 +4,26 @@
 
 RessourceReference<sf::Font> RessourceLoader::getFont(std::string const& name)
 {
-    if(ressourceLoaderInstance.loadedFonts.find(name) != ressourceLoaderInstance.loadedFonts.end())
-        return ressourceLoaderInstance.loadedFonts[name].get();
+    if(RessourceLoader::getInstance().loadedFonts.find(name) != RessourceLoader::getInstance().loadedFonts.end())
+        return RessourceLoader::getInstance().loadedFonts[name].get();
     else
-        return ressourceLoaderInstance.loadFont(name);
+        return RessourceLoader::getInstance().loadFont(name);
 }
 
 RessourceReference<sf::Texture> RessourceLoader::getTexture(std::string const& name)
 {
-    if(ressourceLoaderInstance.loadedTextures.find(name) != ressourceLoaderInstance.loadedTextures.end())
-        return ressourceLoaderInstance.loadedTextures[name].get();
+    if(RessourceLoader::getInstance().loadedTextures.find(name) != RessourceLoader::getInstance().loadedTextures.end())
+        return RessourceLoader::getInstance().loadedTextures[name].get();
     else
-        return ressourceLoaderInstance.loadTexture(name);
+        return RessourceLoader::getInstance().loadTexture(name);
 }
 
 RessourceReference<sf::SoundBuffer> RessourceLoader::getSoundBuffer(std::string const& name)
 {
-    if(ressourceLoaderInstance.loadedSoundBuffers.find(name) != ressourceLoaderInstance.loadedSoundBuffers.end())
-        return ressourceLoaderInstance.loadedSoundBuffers[name].get();
+    if(RessourceLoader::getInstance().loadedSoundBuffers.find(name) != RessourceLoader::getInstance().loadedSoundBuffers.end())
+        return RessourceLoader::getInstance().loadedSoundBuffers[name].get();
     else
-        return ressourceLoaderInstance.loadSoundBuffer(name);
+        return RessourceLoader::getInstance().loadSoundBuffer(name);
 }
 
 RessourceReference<sf::Texture> RessourceLoader::loadTexture(std::string const& name)
@@ -44,7 +44,7 @@ RessourceReference<sf::Font> RessourceLoader::loadFont(std::string const& name)
 
 std::string RessourceLoader::getPath(std::string const& name)
 {
-    if(!ressourceLoaderInstance.wdSet)
+    if(!RessourceLoader::getInstance().wdSet)
     {
         using namespace std::filesystem;
         path p = current_path();
@@ -53,8 +53,8 @@ std::string RessourceLoader::getPath(std::string const& name)
         if(exists(p / "rc"))
             current_path(p);
         else
-            throw std::runtime_error("Can't find resources directory");
-        ressourceLoaderInstance.wdSet = true;
+            throw std::runtime_error("Can't find resources directory.");
+        RessourceLoader::getInstance().wdSet = true;
     }
     return "rc/" + name;
 }
@@ -65,4 +65,10 @@ RessourceReference<sf::SoundBuffer> RessourceLoader::loadSoundBuffer(std::string
     auto snd = std::make_unique<sf::SoundBuffer>();
     snd->loadFromFile(path);
     return loadedSoundBuffers.insert({name, std::move(snd)}).first->second.get();
+}
+
+RessourceLoader& RessourceLoader::getInstance()
+{
+    static RessourceLoader instance;
+    return instance;
 }
