@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 #include "Utilities.hpp"
-
+#include "UI.h"
 
 Platformer::Platformer(sf::RenderWindow& window, const std::filesystem::path& mapPath) : Screen{window}
 {
@@ -76,6 +76,9 @@ std::unique_ptr<Screen> Platformer::execute()
 
         for(auto& platform : platforms_)
             window_.draw(platform);
+
+		window_.setView(uiView_);
+		UI::draw(window_);
 
         window_.display();
 
