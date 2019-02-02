@@ -37,14 +37,31 @@ void UI::draw(sf::RenderWindow & window)
 	getInstance().textDate_.setPosition(1150 - getInstance().textDate_.getGlobalBounds().width/2, 700);
 
 	window.draw(getInstance().spriteBarre_);
+	window.draw(getInstance().spriteButton_);
+	if(getInstance().displayed_) window.draw(getInstance().spriteMenu_);
+
 	window.draw(getInstance().textTime_);
 	window.draw(getInstance().textDate_);
+}
+
+void UI::actionMouseClicked(sf::Vector2f pos)
+{
+	if (getInstance().spriteButton_.getGlobalBounds().contains(pos))
+		getInstance().displayed_ = !getInstance().displayed_;
+	else if(!getInstance().spriteMenu_.getGlobalBounds().contains(pos))
+		getInstance().displayed_ = false;
 }
 
 void UI::loadSprites()
 {
 	getInstance().spriteBarre_.setTexture(RessourceLoader::getTexture("ui/desktop/barre_tache.png"));
 	getInstance().spriteBarre_.setPosition(0, WINDOW_SIZE_Y - getInstance().spriteBarre_.getGlobalBounds().height);
+
+	getInstance().spriteButton_.setTexture(RessourceLoader::getTexture("ui/desktop/start_button.png"));
+	getInstance().spriteButton_.setPosition(0, WINDOW_SIZE_Y - getInstance().spriteButton_.getGlobalBounds().height);
+
+	getInstance().spriteMenu_.setTexture(RessourceLoader::getTexture("ui/desktop/menu_demarrer.png"));
+	getInstance().spriteMenu_.setPosition(0, WINDOW_SIZE_Y - getInstance().spriteButton_.getGlobalBounds().height - getInstance().spriteMenu_.getGlobalBounds().height);
 
 	getInstance().textDate_.setFont(RessourceLoader::getFont("font/consola.ttf"));
 	getInstance().textDate_.setCharacterSize(15);

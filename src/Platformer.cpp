@@ -50,26 +50,32 @@ std::unique_ptr<Screen> Platformer::execute()
             if(res)
                 return std::move(*res);
 
-            sf::Time elapsedTime = GlobalClock::lapTime();
-
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            {
-                camera_.move(0, - cameraSpeed_ * elapsedTime.asSeconds());
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            {
-                camera_.move(0, cameraSpeed_ * elapsedTime.asSeconds());
-            }
-
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            {
-                camera_.move( - cameraSpeed_ * elapsedTime.asSeconds(), 0);
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            {
-                camera_.move(cameraSpeed_ * elapsedTime.asSeconds(), 0);
-            }
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+			{
+				sf::Vector2f mousePos(sf::Mouse::getPosition(window_).x, sf::Mouse::getPosition(window_).y);
+				UI::actionMouseClicked(mousePos);
+			}
         }
+
+		sf::Time elapsedTime = GlobalClock::lapTime();
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			camera_.move(0, -cameraSpeed_ * elapsedTime.asSeconds());
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		{
+			camera_.move(0, cameraSpeed_ * elapsedTime.asSeconds());
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			camera_.move(-cameraSpeed_ * elapsedTime.asSeconds(), 0);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
+			camera_.move(cameraSpeed_ * elapsedTime.asSeconds(), 0);
+		}
 
         window_.clear();
         window_.setView(camera_);
