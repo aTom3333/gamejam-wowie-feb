@@ -43,6 +43,7 @@ std::unique_ptr<Screen> Platformer::execute()
 
     while(window_.isOpen())
     {
+		sf::Vector2f mousePos = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));
         sf::Event event{};
         while(window_.pollEvent(event))
         {
@@ -52,7 +53,6 @@ std::unique_ptr<Screen> Platformer::execute()
 
 			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 			{
-				sf::Vector2f mousePos(sf::Mouse::getPosition(window_).x, sf::Mouse::getPosition(window_).y);
 				if (UI::actionMouseClicked(mousePos))
 					return nullptr;
 			}
@@ -85,6 +85,7 @@ std::unique_ptr<Screen> Platformer::execute()
             window_.draw(platform);
 
 		window_.setView(uiView_);
+		UI::update(mousePos);
 		UI::draw(window_);
 
         window_.display();
