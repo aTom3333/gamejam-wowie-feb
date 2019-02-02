@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "Platformer.hpp"
+#include "PlateformerPaint.h"
 #include "UI.h"
 
 
@@ -15,6 +16,16 @@ void platformMain()
 
     Platformer platformer(window, "maps/map1.txt");
     platformer.execute();
+}
+
+
+void testPaint()
+{
+	sf::RenderWindow window(sf::VideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y), "SFML works!");
+	GlobalClock::start();
+
+	PlateformerPaint platformer(window);
+	platformer.execute();
 }
 
 void spaghet()
@@ -75,7 +86,8 @@ void spaghet()
 int main()
 {
 	UI::loadSprites();
-    platformMain();
+    //platformMain();
     //spaghet();
-    return 0;
+	testPaint();
+	return 0;
 }
