@@ -14,6 +14,7 @@ class Platformer : public Screen
 
     private:
         sf::View camera_ = sf::View(sf::FloatRect(0, 0, WINDOW_SIZE_X, WINDOW_SIZE_Y));
+		sf::View uiView_ = sf::View(sf::FloatRect(0, 0, WINDOW_SIZE_X, WINDOW_SIZE_Y));
         float cameraSpeed_ = 10000;
 
         std::vector<sf::RectangleShape> platforms_;
