@@ -1,6 +1,5 @@
 #include "DJ.hpp"
 #include "RessourceLoader.hpp"
-#include "Utilities.hpp"
 #include <filesystem>
 
 DJ::DJ()
