@@ -5,6 +5,9 @@
 #include <string>
 #include "Utilities.hpp"
 #include "UI.h"
+#include "AnimatedEntity.hpp"
+#include "FallingEntity.hpp"
+
 
 Platformer::Platformer(sf::RenderWindow& window, const std::filesystem::path& mapPath) : Screen{window}
 {
@@ -27,12 +30,20 @@ Platformer::Platformer(sf::RenderWindow& window, const std::filesystem::path& ma
             }
             else
             {
-                platforms_.emplace_back(sf::Vector2f(stof(coords.at(2)), stof(coords.at(3))));
-                platforms_.back().setPosition({stof(coords.at(0)), stof(coords.at(1))});
-                platforms_.back().setFillColor(sf::Color::Green);
+                // TODO Créer les plateformes adaptées
+                //platforms_.emplace_back(sf::Vector2f(stof(coords.at(2)), stof(coords.at(3))));
+                //platforms_.back().setPosition({stof(coords.at(0)), stof(coords.at(1))});
+                //platforms_.back().setFillColor(sf::Color::Green);
             }
         }
     }
+    
+    // TODO Enlever ce truc de test
+    entities_.push_back(std::make_unique<AnimatedEntity<int>>(0, AnimatedSprite(1, sf::milliseconds(250), RessourceLoader::getTexture("sprites/fixed_test_platform.png"))));
+    entities_.push_back(std::make_unique<FallingEntity>(std::make_unique<AnimatedEntity<int>>(0, AnimatedSprite(1, sf::milliseconds(250), RessourceLoader::getTexture("sprites/falling_test_platform.png"))), entities_));
+    
+    entities_.front()->setPosition(200, 400);
+    entities_.back()->setPosition(200, 0);
 }
 
 std::unique_ptr<Screen> Platformer::execute()
@@ -58,6 +69,7 @@ std::unique_ptr<Screen> Platformer::execute()
 			}
         }
 
+        GlobalClock::lap();
 		sf::Time elapsedTime = GlobalClock::lapTime();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -78,11 +90,14 @@ std::unique_ptr<Screen> Platformer::execute()
 			camera_.move(cameraSpeed_ * elapsedTime.asSeconds(), 0);
 		}
 
+        for(auto& entity : entities_)
+            entity->update();
+
         window_.clear();
         window_.setView(camera_);
 
-        for(auto& platform : platforms_)
-            window_.draw(platform);
+        for(auto& entity : entities_)
+            entity->draw(window_);
 
 		window_.setView(uiView_);
 		UI::update(mousePos);

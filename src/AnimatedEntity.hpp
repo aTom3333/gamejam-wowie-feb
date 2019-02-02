@@ -14,7 +14,7 @@
 template<typename StateType>
 class AnimatedEntity : public Entity
 {
-    static_assert(std::is_enum_v<StateType>, "AnimatedEntity is expecting an enum type to describe its possible states");
+    static_assert(std::is_enum_v<StateType> || std::is_integral_v<StateType>, "AnimatedEntity is expecting an enum type or an integral type to describe its possible states");
     
     public:
         AnimatedEntity(StateType defaultState, AnimatedSprite const& sprite);
@@ -26,6 +26,7 @@ class AnimatedEntity : public Entity
         void draw(sf::RenderTarget&) override;
         void updateTransformation();
         sf::FloatRect boundingBox() const override;
+        void update() override;
     
     private:
         AnimatedSprite* currentSprite();
@@ -135,6 +136,12 @@ template<typename StateType>
 StateType AnimatedEntity<StateType>::getState() const
 {
     return current;
+}
+
+template<typename StateType>
+void AnimatedEntity<StateType>::update()
+{
+    updateTransformation();
 }
 
 #endif // ANIMATEDENTITY_HPP

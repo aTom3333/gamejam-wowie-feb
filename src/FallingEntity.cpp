@@ -15,22 +15,31 @@ void FallingEntity::draw(sf::RenderTarget& target)
 void FallingEntity::update()
 {
     auto prev_pos = getPosition();
-    
+
+    move(0, 200*fallingSpeed * GlobalClock::lapTime().asSeconds());
     fallingSpeed += 9.81 * GlobalClock::lapTime().asSeconds();
-    move(0, fallingSpeed * GlobalClock::lapTime().asSeconds());
+    if(fallingSpeed > 0.5)
+        fallingSpeed = 3;
 
     entity_->setPosition(getPosition());
     entity_->setScale(getScale());
     entity_->setRotation(getRotation());
     
-    bool revert = false;
     for(auto const& entity : entitites_) {
         if(entity.get() != this) {
             sf::FloatRect intersection{};
-            if(boundingBox().intersects(entity->boundingBox(), intersection) && intersection.top)
-            {}
+            if((boundingBox().intersects(entity->boundingBox(), intersection) && intersection.top <= prev_pos.y + boundingBox().height)
+                || boundingBox().top + boundingBox().height >= entity->boundingBox().top)
+            {
+                move(0, -intersection.height);
+                fallingSpeed = 0.0f;
+            }
         }
     }
+    
+    entity_->setPosition(getPosition());
+    
+    entity_->update();
 }
 
 sf::FloatRect FallingEntity::boundingBox() const
