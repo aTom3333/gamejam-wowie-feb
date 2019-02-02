@@ -53,9 +53,8 @@ void UI::update(sf::Vector2f pos)
 void UI::draw(sf::RenderWindow & window)
 {
 	std::time_t t = std::time(0);
-	auto now_ptr = localtime(&t);
-	std::tm& now = *now_ptr;
-
+	std::tm now;
+	localtime_s(&now, &t);
 	std::string strTime = "";
 	if (now.tm_hour < 10) strTime += "0";
 	strTime += std::to_string(now.tm_hour) + ":";
