@@ -74,6 +74,7 @@ void UI::draw(sf::RenderWindow & window)
 	getInstance().textDate_.setString(strDate);
 	getInstance().textDate_.setPosition(1150 - getInstance().textDate_.getGlobalBounds().width/2, 700);
 
+	window.draw(getInstance().spriteFond_);
 	window.draw(getInstance().spriteBarre_);
 	window.draw(getInstance().spriteButton_);
 	if (getInstance().displayed_)
@@ -118,6 +119,8 @@ void UI::loadSprites()
 
 	getInstance().spriteQuit_.setTexture(RessourceLoader::getTexture("ui/desktop/quit_button.png"));
 	getInstance().spriteQuit_.setPosition(60, WINDOW_SIZE_Y - 1.8f*getInstance().spriteButton_.getGlobalBounds().height);
+
+	getInstance().spriteFond_.setTexture(RessourceLoader::getTexture("ui/desktop/fond_debut.png"));
 
 
 	getInstance().spritesItem_.resize(4);

@@ -11,6 +11,7 @@ class UI {
 		sf::Sprite spriteButton_;
 		sf::Sprite spriteMenu_;
 		sf::Sprite spriteQuit_;
+		sf::Sprite spriteFond_;
 		std::vector<sf::Sprite> spritesItem_;
 		sf::Text textDate_;
 		sf::Text textTime_;
