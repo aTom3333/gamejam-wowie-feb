@@ -2,6 +2,7 @@
 #include "constantes.hpp"
 #include <random>
 
+
 sf::Vector2f normalize(const sf::Vector2f& source)
 {
     float length = sqrt((source.x * source.x) + (source.y * source.y));
@@ -20,8 +21,8 @@ void fit(sf::Sprite& s)
 
 int random(int min, int max)
 {
-    std::random_device                 rd;
-    static std::default_random_engine  eng(rd());
+    std::random_device rd;
+    static std::default_random_engine eng(rd());
     std::uniform_int_distribution<int> distrib(min, max);
     return distrib(eng);
 }
@@ -44,14 +45,14 @@ sf::Color makeHSV(int hue, float sat, float val, float alpha)
     if(val > 1.f)
         val = 1.f;
 
-    const int   h = hue / 60;
+    const int h = hue / 60;
     const float f = float(hue) / 60 - h;
     const float p = val * (1.f - sat);
     const float q = val * (1.f - sat * f);
     const float t = val * (1.f - sat * (1 - f));
 
     switch(h)
-    {        
+    {
         default :
         case 0 :
         case 6 :
@@ -65,7 +66,7 @@ sf::Color makeHSV(int hue, float sat, float val, float alpha)
         case 4 :
             return sf::Color(t * 255, p * 255, val * 255, alpha);
         case 5 :
-            return sf::Color(val * 255, p * 255, q * 255, alpha);        
+            return sf::Color(val * 255, p * 255, q * 255, alpha);
     }
 }
 
@@ -80,14 +81,57 @@ std::filesystem::path strip_root(const std::filesystem::path& p)
 
 std::vector<std::string> split(const std::string& str, const std::string& sep)
 {
-	std::vector<std::string> out;
-	size_t debut = 0;
-	size_t fin = str.find(sep);
-	while(debut <= str.length())
-    	{
-		out.push_back(str.substr(debut, fin - debut));
-		debut = fin != std::string::npos ? fin + sep.length() : fin;
-		fin = str.find(sep, debut);
-    	}
-	return out;
+    std::vector<std::string> out;
+    size_t debut = 0;
+    size_t fin = str.find(sep);
+    while(debut <= str.length())
+    {
+        out.push_back(str.substr(debut, fin - debut));
+        debut = fin != std::string::npos ? fin + sep.length() : fin;
+        fin = str.find(sep, debut);
+    }
+    return out;
+}
+
+namespace
+{
+    namespace detail
+    {
+        struct has_localtime_r
+        {
+            enum
+            {
+                value = sizeof localtime_r(std::declval<std::time_t*>(), std::declval<std::tm*>())
+                        == sizeof(std::tm*)
+            };
+        };
+        struct has_localtime_s
+        {
+            enum
+            {
+                value = sizeof localtime_s(std::declval<std::time_t*>(), std::declval<std::tm*>())
+                        == sizeof(std::tm*)
+            };
+        };
+    }
+}
+
+std::tm safe_localtime(std::time_t* time)
+{
+    if constexpr(detail::has_localtime_s::value)
+    {
+        std::tm t{};
+        localtime_s(time, &t);
+        return t;
+    }
+    else if constexpr(detail::has_localtime_r::value)
+    {
+        std::tm t{};
+        localtime_r(time, &t);
+        return t;
+    }
+    else
+    {
+        return *localtime(time);
+    }
 }

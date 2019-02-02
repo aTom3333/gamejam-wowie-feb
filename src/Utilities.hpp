@@ -19,4 +19,6 @@ std::filesystem::path strip_root(const std::filesystem::path& p);
 
 std::vector<std::string> split(const std::string& str, const std::string& sep = " ");
 
+std::tm safe_localtime(std::time_t* time);
+
 #endif // !UTILITIES_H
