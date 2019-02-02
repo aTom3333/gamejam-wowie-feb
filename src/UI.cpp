@@ -1,6 +1,7 @@
 #include "UI.h"
 #include "RessourceLoader.hpp"
 #include "constantes.hpp"
+#include "Utilities.hpp"
 
 #include <ctime>
 #include <string>
@@ -53,8 +54,7 @@ void UI::update(sf::Vector2f pos)
 void UI::draw(sf::RenderWindow & window)
 {
 	std::time_t t = std::time(0);
-	std::tm now;
-	localtime_s(&now, &t);
+	std::tm now = safe_localtime(&t);
 	std::string strTime = "";
 	if (now.tm_hour < 10) strTime += "0";
 	strTime += std::to_string(now.tm_hour) + ":";

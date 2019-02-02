@@ -95,23 +95,20 @@ std::vector<std::string> split(const std::string& str, const std::string& sep)
 
 namespace
 {
+    char localtime_s(...);
+    char localtime_r(...);
+    
     namespace detail
     {
         struct has_localtime_r
         {
-            enum
-            {
-                value = sizeof localtime_r(std::declval<std::time_t*>(), std::declval<std::tm*>())
-                        == sizeof(std::tm*)
-            };
+            static constexpr bool value =
+                sizeof localtime_r(std::declval<std::time_t*>(), std::declval<std::tm*>()) == sizeof(std::tm*);
         };
         struct has_localtime_s
         {
-            enum
-            {
-                value = sizeof localtime_s(std::declval<std::time_t*>(), std::declval<std::tm*>())
-                        == sizeof(std::tm*)
-            };
+            static constexpr bool value = 
+                sizeof localtime_s(std::declval<std::time_t*>(), std::declval<std::tm*>()) == sizeof(std::tm*);
         };
     }
 }

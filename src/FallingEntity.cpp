@@ -28,6 +28,12 @@ void FallingEntity::update()
         if(entity.get() != this) {
             sf::FloatRect intersection{};
             if(boundingBox().intersects(entity->boundingBox(), intersection) && intersection.top)
+            {}
         }
     }
+}
+
+sf::FloatRect FallingEntity::boundingBox() const
+{
+    return entity_->boundingBox();
 }
