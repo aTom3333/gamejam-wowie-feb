@@ -1,6 +1,8 @@
 #ifndef SCOPEGUARD_HPP
 #define SCOPEGUARD_HPP
 
+#include <utility>
+
 template<typename Func>
 class ScopeGuard
 {
