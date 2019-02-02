@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 #include "Utilities.hpp"
-
+#include "UI.h"
 
 Platformer::Platformer(sf::RenderWindow& window, const std::filesystem::path& mapPath) : Screen{window}
 {
@@ -43,6 +43,7 @@ std::unique_ptr<Screen> Platformer::execute()
 
     while(window_.isOpen())
     {
+		sf::Vector2f mousePos = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));
         sf::Event event{};
         while(window_.pollEvent(event))
         {
@@ -50,32 +51,42 @@ std::unique_ptr<Screen> Platformer::execute()
             if(res)
                 return std::move(*res);
 
-            sf::Time elapsedTime = GlobalClock::lapTime();
-
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            {
-                camera_.move(0, - cameraSpeed_ * elapsedTime.asSeconds());
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            {
-                camera_.move(0, cameraSpeed_ * elapsedTime.asSeconds());
-            }
-
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            {
-                camera_.move( - cameraSpeed_ * elapsedTime.asSeconds(), 0);
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            {
-                camera_.move(cameraSpeed_ * elapsedTime.asSeconds(), 0);
-            }
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+			{
+				if (UI::actionMouseClicked(mousePos))
+					return nullptr;
+			}
         }
+
+		sf::Time elapsedTime = GlobalClock::lapTime();
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			camera_.move(0, -cameraSpeed_ * elapsedTime.asSeconds());
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		{
+			camera_.move(0, cameraSpeed_ * elapsedTime.asSeconds());
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			camera_.move(-cameraSpeed_ * elapsedTime.asSeconds(), 0);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
+			camera_.move(cameraSpeed_ * elapsedTime.asSeconds(), 0);
+		}
 
         window_.clear();
         window_.setView(camera_);
 
         for(auto& platform : platforms_)
             window_.draw(platform);
+
+		window_.setView(uiView_);
+		UI::update(mousePos);
+		UI::draw(window_);
 
         window_.display();
 

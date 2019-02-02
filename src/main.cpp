@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "Platformer.hpp"
+#include "UI.h"
 
 
 void platformMain()
@@ -73,7 +74,8 @@ void spaghet()
 
 int main()
 {
-    //platformMain();
-    spaghet();
+	UI::loadSprites();
+    platformMain();
+    //spaghet();
     return 0;
 }
