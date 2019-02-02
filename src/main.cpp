@@ -49,7 +49,7 @@ void spaghet()
         sf::Event event;
         while(window.pollEvent(event))
         {
-            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
+            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Return)
 			{
 				goto nul;                
 			}
@@ -73,7 +73,7 @@ void spaghet()
         sf::Event event;
         while(window.pollEvent(event))
         {
-            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
+            if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Return)
                 goto nul2;
         }
         sf::sleep(sf::milliseconds(10));
