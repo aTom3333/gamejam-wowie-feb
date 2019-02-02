@@ -14,8 +14,8 @@ UI & UI::getInstance()
 void UI::draw(sf::RenderWindow & window)
 {
 	std::time_t t = std::time(0);
-	std::tm now;
-	localtime_s(&now, &t);
+	auto now_ptr = localtime(&t);
+	std::tm& now = *now_ptr;
 
 	std::string strTime = "";
 	if (now.tm_hour < 10) strTime += "0";
@@ -76,7 +76,7 @@ void UI::loadSprites()
 	getInstance().spriteMenu_.setPosition(0, WINDOW_SIZE_Y - getInstance().spriteButton_.getGlobalBounds().height - getInstance().spriteMenu_.getGlobalBounds().height);
 
 	getInstance().spriteQuit_.setTexture(RessourceLoader::getTexture("ui/desktop/quit_button.png"));
-	getInstance().spriteQuit_.setPosition(60, WINDOW_SIZE_Y - 1.8*getInstance().spriteButton_.getGlobalBounds().height);
+	getInstance().spriteQuit_.setPosition(60, WINDOW_SIZE_Y - 1.8f*getInstance().spriteButton_.getGlobalBounds().height);
 
 
 	getInstance().spritesItem_.resize(4);
