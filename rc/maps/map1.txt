@@ -1,0 +1,9 @@
+#commentaire
+
+#dimensions de la carte (X Y)
+5000 5000
+
+#plateformes (X haut gauche, Y haut gauche, largeur, hauteur)
+100 100 100 100
+1000 1000 500 200
+800 710 1000 263

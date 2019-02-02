@@ -17,4 +17,6 @@ int random(int max);
 
 std::filesystem::path strip_root(const std::filesystem::path& p);
 
+std::vector<std::string> split(const std::string& str, const std::string& sep = " ");
+
 #endif // !UTILITIES_H
