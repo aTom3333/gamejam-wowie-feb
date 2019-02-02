@@ -21,7 +21,6 @@ class AnimatedSprite : public sf::Sprite
     private:
         sf::IntRect frameSize;
         int numFrame;
-        int n;
         sf::Time timeBetween;
         sf::Vector2i origin;
         sf::Time animationProgress;

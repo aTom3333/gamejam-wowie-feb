@@ -2,64 +2,65 @@
 #include <algorithm>
 
 
-sf::Time GlobalClock::restart() noexcept
+sf::Time GlobalClock::lap() noexcept
 {
-    sf::Time elapsed = clock.restart();
-    
-    if(running)
+    sf::Time elapsed = getInstance().clock.restart();
+
+    if(getInstance().running)
     {
-        frame = elapsed * (float)factor;
-        global += frame;
-        for(auto& [time, fun] : callbacks)
+        getInstance().frame = elapsed * (float) getInstance().factor;
+        getInstance().global += getInstance().frame;
+        for(auto&[time, fun] : getInstance().callbacks)
         {
-            time -= frame;
+            time -= getInstance().frame;
             if(time < sf::Time::Zero)
                 fun();
         }
-        callbacks.erase(std::remove_if(callbacks.begin(),
-                                       callbacks.end(),
+        getInstance().callbacks.erase(std::remove_if(getInstance().callbacks.begin(),
+                                                     getInstance().callbacks.end(),
                                        [](auto const& p) { return p.first < sf::Time::Zero; }),
-                        callbacks.end());
+                                      getInstance().callbacks.end());
     }
     else
     {
-        frame = sf::Time::Zero;
+        getInstance().frame = sf::Time::Zero;
     }
-    
-    return frameTime();
+
+    return lapTime();
 }
 
-sf::Time GlobalClock::frameTime() const noexcept
+sf::Time GlobalClock::lapTime() noexcept
 {
-    return frame;
+    return getInstance().frame;
 }
 
 void GlobalClock::stop() noexcept
 {
-    running = false;
+    getInstance().running = false;
 }
 
 void GlobalClock::start() noexcept
 {
-    running = true;
+    getInstance().running = true;
 }
 
 void GlobalClock::changeSpeed(double speed) noexcept
 {
-    factor = speed;
+    getInstance().factor = speed;
 }
 
-sf::Time GlobalClock::timeSinceStartup() const noexcept
+sf::Time GlobalClock::timeSinceStartup() noexcept
 {
-    return global;
-}
-
-GlobalClock& GlobalClock::getClock()
-{
-    return instance;
+    return getInstance().global;
 }
 
 void GlobalClock::executeIn(sf::Time delay, std::function<void()> fun)
 {
-    callbacks.emplace_back(delay, std::move(fun));
+    getInstance().callbacks.emplace_back(delay, std::move(fun));
+}
+
+GlobalClock& GlobalClock::getInstance()
+{
+    static GlobalClock instance;
+    return instance;
 }
